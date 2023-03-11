@@ -17,10 +17,10 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
-    "paths":{
+    "paths": {
       "@domain/*": ["src/domain/*"],
       "@infra/*": ["src/infra/*"],
-      "@api/*": ["src/api/*"],
+      "@api/*": ["src/api/*"]
     }
   }
 }

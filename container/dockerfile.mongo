@@ -1,0 +1,5 @@
+    image: 'mongo:3.4.1'
+    ports:
+      - '27017:27017'
+    volumes:
+      - 'mongo:/data/db'

@@ -1,7 +1,4 @@
-import { UserEntity } from '@domain/entities/user.entity';
-
-export interface AvatarRepository {
-  createEvent: () => UserEntity;
-  deleteUserAvatar: () => UserEntity;
+export interface EmailSender {
+  sendEmail: (body: any, user: string) => void;
 }
-export const AvatarRepository = Symbol('AvatarRepository');
+export const EmailSender = Symbol('EmailSender');

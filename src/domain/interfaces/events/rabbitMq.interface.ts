@@ -1,7 +1,4 @@
-import { UserEntity } from '@domain/entities/user.entity';
-
-export interface AvatarRepository {
-  getUserAvatar: () => UserEntity;
-  deleteUserAvatar: () => UserEntity;
+export interface RabbitMq {
+  emiteEvent: (body: any) => void;
 }
-export const AvatarRepository = Symbol('AvatarRepository');
+export const RabbitMq = Symbol('RabbitMq');

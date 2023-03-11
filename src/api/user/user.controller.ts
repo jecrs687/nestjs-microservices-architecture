@@ -1,22 +1,23 @@
-import { HealthService } from '@domain/services/health.service';
-import { Controller, Post, Body, Get } from '@nestjs/common';
-import { CreateUser } from './user.dto';
-import zod, { z } from 'zod';
-import { createUserSchema } from './user.schemas';
 import { UserEntity } from '@domain/entities/user.entity';
+import { UserService } from '@domain/services/user.service';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { z } from 'zod';
+import { CreateUser } from './user.dto';
+import { createUserSchema } from './user.schemas';
 @Controller('/api/user')
-export class AppController {
-  constructor(private readonly appService: HealthService) {}
+export class UserController {
+  constructor(private readonly userService: UserService) {}
 
   @Post()
-  postUser(@Body() user: CreateUser): string {
+  postUser(@Body() user: CreateUser): Promise<UserEntity> {
     const userBody: z.infer<typeof createUserSchema> =
       createUserSchema.parse(user);
-    return this.appService.getHealth();
+
+    return this.userService.postUser(userBody as Omit<UserEntity, 'id'>);
   }
 
-  @Get()
-  getUser(): string {
-    return this.appService.getHealth();
+  @Get(':id')
+  getUser(@Param() params): Promise<UserEntity> {
+    return this.userService.getUser(params.id);
   }
 }
