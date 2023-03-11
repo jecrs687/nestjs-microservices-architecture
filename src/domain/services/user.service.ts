@@ -25,7 +25,7 @@ export class UserService {
       );
       if (!data) throw new NotFoundException('user not found');
       const userDto = await this.userRepository.postUser(
-        data.data as UserEntity,
+        data as UserEntity,
       );
       return userDto;
     }
@@ -44,5 +44,8 @@ export class UserService {
     });
 
     return data as UserEntity;
+  }
+  public async removeAvatar(user: string): Promise<boolean> {
+    return await this.userRepository.removeAvatar(user);;
   }
 }

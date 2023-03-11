@@ -1,6 +1,5 @@
 import { ImageClient } from '@domain/interfaces/gateway/image.interface';
 import { AvatarRepository } from '@domain/interfaces/services/avatar.interface';
-import { UserRepository } from '@domain/interfaces/services/user.interface';
 import { AvatarStorage } from '@domain/interfaces/storage/avatar.storage';
 import { Inject, Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
@@ -11,8 +10,6 @@ export class AvatarService {
   constructor(
     @Inject(AvatarRepository)
     private readonly avatarRepository: AvatarRepository,
-    @Inject(UserRepository)
-    private readonly userRepository: UserRepository,
     @Inject(AvatarStorage)
     private readonly file: AvatarStorage,
     private readonly userService: UserService,
@@ -34,7 +31,8 @@ export class AvatarService {
     return image;
   }
   public async deleteUserAvatar(userId: string): Promise<boolean> {
-    const user = await this.avatarRepository.deleteUserAvatar(userId);
-    return user;
+    const userAvatar = await this.avatarRepository.deleteUserAvatar(userId);
+    const user = await this.userService.removeAvatar(userId);
+    return user && userAvatar;
   }
 }
