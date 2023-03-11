@@ -1,18 +1,17 @@
 import { UserEntity } from '@domain/entities/user.entity';
 import { UserRepository } from '@domain/interfaces/services/user.interface';
-import { UserFactory } from '@infra/factory/user.factory';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class UserRepositoryMemory implements UserRepository {
-  constructor(private readonly userFactory: UserFactory) {}
+  constructor() {}
   private users: UserEntity[] = [];
 
   async getUser(id: string): Promise<UserEntity> {
     return this.users.find((user) => user.id == id);
   }
-  async postUser(user: Omit<UserEntity, 'id'>): Promise<UserEntity> {
-    const userDto: UserEntity = this.userFactory.create(user);
+  async postUser(user: UserEntity): Promise<UserEntity> {
+    const userDto: UserEntity =  user;
     this.users.push(userDto);
     return userDto;
   }

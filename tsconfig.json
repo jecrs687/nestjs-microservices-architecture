@@ -20,7 +20,8 @@
     "paths": {
       "@domain/*": ["src/domain/*"],
       "@infra/*": ["src/infra/*"],
-      "@api/*": ["src/api/*"]
+      "@api/*": ["src/api/*"],
+      "@modules/*": ["src/modules/*"]
     }
   }
 }

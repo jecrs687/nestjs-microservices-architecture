@@ -6,17 +6,16 @@ describe('UserRepositoryMemory', () => {
   let userFactory: UserFactory;
 
   beforeEach(() => {
-    userFactory = new UserFactory();
-    userRepositoryMemory = new UserRepositoryMemory(userFactory);
+    userRepositoryMemory = new UserRepositoryMemory();
   });
 
   describe('getUser', () => {
     it('should return the user with the given id', async () => {
-      const user = userFactory.createPartial({
+      const user = UserFactory.createPartial({
         email: 'john@doe.com',
       });
-      userRepositoryMemory.postUser(user);
 
+      userRepositoryMemory.postUser(user);
       const result = await userRepositoryMemory.getUser(user.id);
 
       expect(result).toEqual(user);
@@ -31,7 +30,7 @@ describe('UserRepositoryMemory', () => {
 
   describe('removeAvatar', () => {
     it('should set the avatar to null if the user exists', async () => {
-      const user = userFactory.createPartial({
+      const user = UserFactory.createPartial({
         first_name: 'John Doe',
         email: 'john@doe.com',
         avatar: 'avatar.jpg',

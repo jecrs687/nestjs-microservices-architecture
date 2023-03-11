@@ -2,22 +2,20 @@ import { UserEntity } from '@domain/entities/user.entity';
 import { Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 
+import { faker } from '@faker-js/faker';
+
 @Injectable()
 export class UserFactory {
   constructor() {}
-  public create(user: Omit<UserEntity, 'id'>): UserEntity {
-    const userDto: UserEntity = { id: `${randomUUID()}`, ...user };
-    return userDto;
-  }
-  public createPartial(user: Partial<UserEntity>): UserEntity {
+  static createPartial(user?: Partial<UserEntity>): UserEntity {
     const userDto: UserEntity = {
       id: `${randomUUID()}`,
-      email: `${randomUUID()}`,
-      first_name: `${randomUUID()}`,
-      last_name: `${randomUUID()}`,
-      avatar: `${randomUUID()}`,
-      ...user,
+      email: `${faker.name.firstName()}@${faker.random.word()}.com`,
+      first_name: `${faker.name.firstName()}`,
+      last_name: `${faker.name.lastName()}`,
+      avatar: `${faker.image.avatar()}`,
     };
+    Object.assign(userDto, user)
     return userDto;
   }
 }

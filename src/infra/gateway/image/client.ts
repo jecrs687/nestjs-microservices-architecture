@@ -1,17 +1,23 @@
+import { ImageClient } from '@domain/interfaces/gateway/image.interface';
 import { Injectable } from '@nestjs/common';
-import axios, { AxiosInstance } from 'axios';
+import { AxiosInstance } from 'axios';
+import { Client } from '../client.gatway';
 
 @Injectable()
-export class ImageClient {
-  constructor() {
-    this.axios = axios.create({
+export class ImageClientService implements ImageClient {
+  constructor(private readonly client: Client) {
+    this.axios = this.client.getIntance({
+      instanceConfigs: {
       timeout: 4000,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json' }},
+      clientConfigs: {
+        hideHeaders: false,
+      }
     });
   }
   public axios: AxiosInstance;
 
-  public async get(url: string): Promise<any> {
+  public async getImageBase64(url: string): Promise<string> {
     const image = await this.axios.get(url, {
       responseType: 'arraybuffer',
     });

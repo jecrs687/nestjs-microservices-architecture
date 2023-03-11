@@ -3,7 +3,7 @@ import { EmailSender } from '@domain/interfaces/events/emails.interface';
 import { RabbitMq } from '@domain/interfaces/events/rabbitMq.interface';
 import { ReqResClient } from '@domain/interfaces/gateway/reqres.interface';
 import { UserRepository } from '@domain/interfaces/services/user.interface';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 
 @Injectable()
 export class UserService {
@@ -23,6 +23,7 @@ export class UserService {
       const { data } = await this.reqResClient.get(
         this.reqResClient.endpoints.getUser(id),
       );
+      if (!data) throw new NotFoundException('user not found');
       const userDto = await this.userRepository.postUser(
         data.data as UserEntity,
       );
