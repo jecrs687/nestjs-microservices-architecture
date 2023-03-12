@@ -21,7 +21,8 @@
       "@domain/*": ["src/domain/*"],
       "@infra/*": ["src/infra/*"],
       "@api/*": ["src/api/*"],
-      "@modules/*": ["src/modules/*"]
+      "@modules/*": ["src/modules/*"],
+      "@decoratos/*": ["src/infra/config/decorators/*"]
     }
   }
 }

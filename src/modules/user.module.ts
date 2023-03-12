@@ -36,7 +36,6 @@ import { AvatarStorageMemory } from '@infra/storage/memory/Avatar.storage';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Connection } from 'mongoose';
 const isTest = process.env.NODE_ENV == 'test';
 @Module({
   imports: [
@@ -46,19 +45,19 @@ const isTest = process.env.NODE_ENV == 'test';
     MongooseModule.forRoot('mongodb://root:root@localhost:27017', {
       connectionName: 'users',
       dbName: 'users',
-      connectionFactory: (connection: Connection) => {
-        connection.model(UserMongo.name, UserSchema);
-        return connection;
-      },
     }),
+    MongooseModule.forFeature(
+      [{ name: UserMongo.name, schema: UserSchema }],
+      'users',
+    ),
     MongooseModule.forRoot('mongodb://root:root@127.0.0.1:27017', {
       connectionName: 'avatars',
       dbName: 'avatars',
-      connectionFactory: (connection: Connection) => {
-        connection.model(AvatarMongo.name, AvatarSchema);
-        return connection;
-      },
     }),
+    MongooseModule.forFeature(
+      [{ name: AvatarMongo.name, schema: AvatarSchema }],
+      'avatars',
+    ),
   ],
   controllers: [UserController, AvatarController],
   providers: [
@@ -95,7 +94,6 @@ const isTest = process.env.NODE_ENV == 'test';
       provide: ImageClient,
       useClass: isTest ? ImageClientServiceMock : ImageClientService,
     },
-
     Client,
     UserService,
     AvatarService,

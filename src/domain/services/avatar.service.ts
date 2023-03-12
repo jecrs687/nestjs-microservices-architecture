@@ -20,7 +20,7 @@ export class AvatarService {
     const hash = await this.avatarRepository.getUserAvatarHash(userId);
     if (!hash) {
       const client = await this.userService.getUser(userId);
-
+      if (client.avatar === null) return null;
       const data = await this.imageClient.getImageBase64(client.avatar);
       const hash = randomUUID();
       await this.avatarRepository.postUserAvatar(userId, hash);

@@ -30,7 +30,7 @@ export class UserService {
     return userMemory;
   }
   public async postUser(user: Omit<UserEntity, 'id'>): Promise<UserEntity> {
-    await this.userRepository.postUser(user);
+    const userDb = await this.userRepository.postUser(user);
     const { data } = await this.reqResClient.post(
       this.reqResClient.endpoints.createUser(),
       user,
@@ -41,7 +41,7 @@ export class UserService {
       payload: data,
     });
 
-    return data as UserEntity;
+    return userDb as UserEntity;
   }
   public async removeAvatar(user: string): Promise<boolean> {
     return await this.userRepository.removeAvatar(user);

@@ -1,18 +1,21 @@
 import { UserEntity } from '@domain/entities/user.entity';
 import { UserRepository } from '@domain/interfaces/services/user.interface';
 import { UserFactory } from '@infra/factory/user.factory';
-import { Injectable } from '@nestjs/common';
-import { InjectConnection } from '@nestjs/mongoose';
-import { Connection } from 'mongoose';
-import { UserMongo } from './entities/user.mongo';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { UserDocument, UserMongo } from './entities/user.mongo';
 
 @Injectable()
 export class UserRepositoryMongo implements UserRepository {
-  constructor(@InjectConnection('users') private connection: Connection) {}
+  constructor(
+    @InjectModel(UserMongo.name, 'users')
+    private userModel: Model<UserDocument>,
+  ) {}
 
   async getUser(id: string): Promise<UserEntity> {
     try {
-      const user = await this.connection.models[UserMongo.name].findOne({ id });
+      const user = await this.userModel.findOne({ id });
       return user as unknown as UserEntity;
     } catch (e) {
       return undefined;
@@ -20,14 +23,14 @@ export class UserRepositoryMongo implements UserRepository {
   }
   async postUser(user: UserEntity): Promise<UserEntity> {
     const userDto = UserFactory.createPartial(user);
-    const userDb = await this.connection.models[UserMongo.name].create(user);
+    const userDb = await this.userModel.create(userDto);
     userDb.save();
-    return userDto;
+    return userDb;
   }
-  async removeAvatar(userId: string): Promise<boolean> {
-    const user = await this.connection.get(userId);
-    if (!user) return false;
-    await this.connection.set(userId, { ...user, avatar: null });
+  async removeAvatar(id: string): Promise<boolean> {
+    const user = await this.userModel.findOne({ id });
+    if (!user) throw new NotFoundException('user not found');
+    await this.userModel.updateOne({ id }, { avatar: null });
     return true;
   }
 }

@@ -1,19 +1,26 @@
 import { AvatarRepository } from '@domain/interfaces/services/avatar.interface';
-import { Injectable } from '@nestjs/common';
-import { InjectConnection } from '@nestjs/mongoose';
-import { Connection } from 'mongoose';
-import { AvatarMongo } from './entities/avatar.mongo';
+import {
+  Injectable,
+  NotFoundException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { AvatarDocument, AvatarMongo } from './entities/avatar.mongo';
 @Injectable()
 export class AvatarRepositoryMongo implements AvatarRepository {
-  constructor(@InjectConnection('avatars') private connection: Connection) {}
+  constructor(
+    @InjectModel(AvatarMongo.name, 'avatars')
+    private avatarModel: Model<AvatarDocument>,
+  ) {}
   avatar: [string, string][] = [];
 
   async getUserAvatarHash(userId: string): Promise<string> {
     try {
-      const avatar = (await this.connection.models[AvatarMongo.name].findOne({
+      const avatar = await this.avatarModel.findOne({
         userId,
-      })) as unknown as { hash: string };
-      if (!avatar?.hash) return null;
+      });
+      if (!avatar) return null;
       return avatar.hash;
     } catch (e) {
       return null;
@@ -21,12 +28,12 @@ export class AvatarRepositoryMongo implements AvatarRepository {
   }
   async deleteUserAvatar(userId: string): Promise<boolean> {
     try {
-      const avatar = (await this.connection.models[AvatarMongo.name].findOne({
-        id: userId,
-      })) as unknown as { hash: string };
-      if (!avatar) return false;
-      this.connection.models[AvatarMongo.name].deleteOne({
-        id: userId,
+      const avatar = await this.avatarModel.findOne({
+        userId,
+      });
+      if (!avatar) throw new NotFoundException('User does not have an avatar');
+      await this.avatarModel.deleteOne({
+        userId,
       });
       return true;
     } catch (e) {
@@ -34,10 +41,13 @@ export class AvatarRepositoryMongo implements AvatarRepository {
     }
   }
   async postUserAvatar(userId: string, hash: string): Promise<void> {
-    const user = await this.connection.models[AvatarMongo.name].findOne({
-      id: userId,
+    const user = await this.avatarModel.findOne({
+      userId,
     });
-    const avatarDto = await this.connection.models[AvatarMongo.name].create({
+    if (user) {
+      throw new UnprocessableEntityException('User already has an avatar');
+    }
+    const avatarDto = await this.avatarModel.create({
       userId,
       hash,
     });
