@@ -1,4 +1,4 @@
-import { TransformInterceptor } from '@decoratos/interceptor.decorator';
+import { TransformInterceptor } from '@decorators/interceptor.decorator';
 import { UserEntity } from '@domain/entities/user.entity';
 import { UserService } from '@domain/services/user.service';
 import {
@@ -9,10 +9,12 @@ import {
   Post,
   UseInterceptors,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { CreateUser } from './user.dto';
 import { createUserSchema } from './user.schemas';
 @UseInterceptors(TransformInterceptor)
+@ApiTags('Users')
 @Controller('/api/user')
 export class UserController {
   constructor(private readonly userService: UserService) {}

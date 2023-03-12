@@ -22,7 +22,7 @@
       "@infra/*": ["src/infra/*"],
       "@api/*": ["src/api/*"],
       "@modules/*": ["src/modules/*"],
-      "@decoratos/*": ["src/infra/configs/decorators/*"]
+      "@decorators/*": ["src/infra/configs/decorators/*"]
     }
   }
 }
