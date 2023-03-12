@@ -8,6 +8,7 @@ export class AvatarRepositoryMemory implements AvatarRepository {
   async getUserAvatarHash(userId: string): Promise<string> {
     const avatar = this.avatar.find((user) => user[0] == userId);
     if (!avatar) return null;
+    return avatar[1];
   }
   async deleteUserAvatar(userId: string): Promise<boolean> {
     const userIndex = this.avatar.findIndex((user) => user[0] === userId);

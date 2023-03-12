@@ -75,7 +75,7 @@
       "@infra/(.*)": "<rootDir>/src/infra/$1",
       "@modules/(.*)": "<rootDir>/src/modules/$1",
       "@decoratos/(.*)": [
-        "<rootDir>/src/infra/config/decorators//$1"
+        "<rootDir>/src/infra/configs/decorators/$1"
       ]
     },
     "moduleFileExtensions": [

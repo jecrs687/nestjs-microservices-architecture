@@ -1,7 +1,15 @@
+import { TransformInterceptor } from '@decoratos/interceptor.decorator';
 import { AvatarService } from '@domain/services/avatar.service';
-import { Controller, Delete, Get, Param } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  Param,
+  UseInterceptors,
+} from '@nestjs/common';
 import { AvatarResponseDto } from './avatar.dto';
 
+@UseInterceptors(TransformInterceptor)
 @Controller('/api/user/:id/avatar')
 export class AvatarController {
   constructor(private readonly avatarService: AvatarService) {}

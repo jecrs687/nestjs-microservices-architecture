@@ -1,9 +1,5 @@
 import { AvatarRepository } from '@domain/interfaces/services/avatar.interface';
-import {
-  Injectable,
-  NotFoundException,
-  UnprocessableEntityException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { AvatarDocument, AvatarMongo } from './entities/avatar.mongo';
@@ -20,18 +16,14 @@ export class AvatarRepositoryMongo implements AvatarRepository {
       const avatar = await this.avatarModel.findOne({
         userId,
       });
-      if (!avatar) return null;
+      if (!avatar) return undefined;
       return avatar.hash;
     } catch (e) {
-      return null;
+      return undefined;
     }
   }
   async deleteUserAvatar(userId: string): Promise<boolean> {
     try {
-      const avatar = await this.avatarModel.findOne({
-        userId,
-      });
-      if (!avatar) throw new NotFoundException('User does not have an avatar');
       await this.avatarModel.deleteOne({
         userId,
       });
@@ -41,12 +33,6 @@ export class AvatarRepositoryMongo implements AvatarRepository {
     }
   }
   async postUserAvatar(userId: string, hash: string): Promise<void> {
-    const user = await this.avatarModel.findOne({
-      userId,
-    });
-    if (user) {
-      throw new UnprocessableEntityException('User already has an avatar');
-    }
     const avatarDto = await this.avatarModel.create({
       userId,
       hash,

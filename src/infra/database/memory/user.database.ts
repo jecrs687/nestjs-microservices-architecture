@@ -1,5 +1,6 @@
 import { UserEntity } from '@domain/entities/user.entity';
 import { UserRepository } from '@domain/interfaces/services/user.interface';
+import { UserFactory } from '@infra/factory/user.factory';
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
@@ -11,7 +12,7 @@ export class UserRepositoryMemory implements UserRepository {
     return this.users.find((user) => user.id == id);
   }
   async postUser(user: UserEntity): Promise<UserEntity> {
-    const userDto: UserEntity =  user;
+    const userDto: UserEntity = UserFactory.createPartial(user);
     this.users.push(userDto);
     return userDto;
   }

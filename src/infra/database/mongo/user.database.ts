@@ -1,7 +1,7 @@
 import { UserEntity } from '@domain/entities/user.entity';
 import { UserRepository } from '@domain/interfaces/services/user.interface';
 import { UserFactory } from '@infra/factory/user.factory';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { UserDocument, UserMongo } from './entities/user.mongo';
@@ -29,7 +29,7 @@ export class UserRepositoryMongo implements UserRepository {
   }
   async removeAvatar(id: string): Promise<boolean> {
     const user = await this.userModel.findOne({ id });
-    if (!user) throw new NotFoundException('user not found');
+    if (!user) return false;
     await this.userModel.updateOne({ id }, { avatar: null });
     return true;
   }
