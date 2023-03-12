@@ -1,19 +1,16 @@
+import { AvatarRepository } from '@domain/interfaces/database/avatar.interface';
 import { ImageClient } from '@domain/interfaces/gateway/image.interface';
-import { AvatarRepository } from '@domain/interfaces/services/avatar.interface';
 import { AvatarStorage } from '@domain/interfaces/storage/avatar.storage';
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { UserService } from './user.service';
 
 @Injectable()
 export class AvatarService {
   constructor(
-    @Inject(AvatarRepository)
     private readonly avatarRepository: AvatarRepository,
-    @Inject(AvatarStorage)
     private readonly file: AvatarStorage,
     private readonly userService: UserService,
-    @Inject(ImageClient)
     private readonly imageClient: ImageClient,
   ) {}
   public async getUserAvatar(userId: string): Promise<string> {

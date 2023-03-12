@@ -1,4 +1,4 @@
-import { Health } from '@domain/interfaces/services/health.interface';
+import { Health } from '@domain/interfaces/database/health.interface';
 import { Inject, Injectable } from '@nestjs/common';
 
 @Injectable()

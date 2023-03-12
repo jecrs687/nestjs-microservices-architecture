@@ -1,4 +1,4 @@
-import { AvatarRepository } from '@domain/interfaces/services/avatar.interface';
+import { AvatarRepository } from '@domain/interfaces/database/avatar.interface';
 import { Injectable } from '@nestjs/common';
 @Injectable()
 export class AvatarRepositoryMemory implements AvatarRepository {

@@ -15,7 +15,7 @@ export class UserFactory {
       last_name: `${faker.name.lastName()}`,
       avatar: `${faker.image.avatar()}`,
     };
-    Object.assign(userDto, user)
+    Object.assign(userDto, user);
     return userDto;
   }
 }

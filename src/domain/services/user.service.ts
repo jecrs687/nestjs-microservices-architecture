@@ -1,20 +1,16 @@
 import { UserEntity } from '@domain/entities/user.entity';
+import { UserRepository } from '@domain/interfaces/database/user.interface';
 import { EmailSender } from '@domain/interfaces/events/emails.interface';
 import { RabbitMq } from '@domain/interfaces/events/rabbitMq.interface';
 import { ReqResClient } from '@domain/interfaces/gateway/reqres.interface';
-import { UserRepository } from '@domain/interfaces/services/user.interface';
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 @Injectable()
 export class UserService {
   constructor(
-    @Inject(UserRepository)
     private readonly userRepository: UserRepository,
-    @Inject(ReqResClient)
     private readonly reqResClient: ReqResClient,
-    @Inject(EmailSender)
     private readonly emailSender: EmailSender,
-    @Inject(RabbitMq)
     private readonly rabbitMq: RabbitMq,
   ) {}
   public async getUser(id: string): Promise<UserEntity> {

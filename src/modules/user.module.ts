@@ -1,12 +1,12 @@
 import { AvatarController } from '@api/user/avatar/avatar.controller';
 import { UserController } from '@api/user/user.controller';
+import { AvatarRepository } from '@domain/interfaces/database/avatar.interface';
+import { Health } from '@domain/interfaces/database/health.interface';
+import { UserRepository } from '@domain/interfaces/database/user.interface';
 import { EmailSender } from '@domain/interfaces/events/emails.interface';
 import { RabbitMq } from '@domain/interfaces/events/rabbitMq.interface';
 import { ImageClient } from '@domain/interfaces/gateway/image.interface';
 import { ReqResClient } from '@domain/interfaces/gateway/reqres.interface';
-import { AvatarRepository } from '@domain/interfaces/services/avatar.interface';
-import { Health } from '@domain/interfaces/services/health.interface';
-import { UserRepository } from '@domain/interfaces/services/user.interface';
 import { AvatarStorage } from '@domain/interfaces/storage/avatar.storage';
 import { AvatarService } from '@domain/services/avatar.service';
 import { HealthService } from '@domain/services/health.service';
