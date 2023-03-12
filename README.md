@@ -18,6 +18,16 @@ Swagger: [http://localhost:3000/swagger](http://localhost:3000/swagger)
 }
 ```
 
+<ul>
+    <li>
+            <p>Business Rules:</p>
+        <ul>
+            <li>All data obtained from reqres will be stored and manipulated exclusively in the database.</li>
+        </ul>
+    </li>
+</ul>
+
+
 
 - Install dependencies: 
 ```

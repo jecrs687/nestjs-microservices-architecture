@@ -2,6 +2,7 @@ import { TransformInterceptor } from '@decorators/interceptor.decorator';
 import { UserEntity } from '@domain/entities/user.entity';
 import { UserService } from '@domain/services/user.service';
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -21,8 +22,14 @@ export class UserController {
 
   @Post()
   postUser(@Body() user: CreateUser): Promise<UserEntity> {
-    const userBody: z.infer<typeof createUserSchema> =
-      createUserSchema.parse(user);
+    const userBody: z.infer<typeof createUserSchema> = createUserSchema.parse(
+      user,
+      {
+        errorMap: (error) => {
+          throw new BadRequestException({ error });
+        },
+      },
+    );
 
     return this.userService.postUser(userBody as Omit<UserEntity, 'id'>);
   }
