@@ -23,7 +23,8 @@ export class ReqResClientService implements ReqResClient {
   public endpoints = ENDPOINTS;
 
   public async get(url: string): Promise<any> {
-    return await this.axios.get(url);
+    const response = await this.axios.get(url);
+    return response.data || response;
   }
   public async post(url: string, body: any): Promise<any> {
     return await this.axios.post(url, body);

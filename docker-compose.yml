@@ -8,8 +8,6 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: root
-    networks:
-      - backend
   mongo-express:
     image: mongo-express
     ports:
@@ -19,9 +17,7 @@ services:
     environment:
         ME_CONFIG_MONGODB_ADMINUSERNAME: root
         ME_CONFIG_MONGODB_ADMINPASSWORD: root
-        ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
-    networks:
-      - backend
+        ME_CONFIG_MONGODB_URL: mongodb://root:root@mongo:27017/
   rabbitmq:
     image: rabbitmq:3-management
     restart: always
@@ -32,8 +28,5 @@ services:
       RABBITMQ_DEFAULT_USER: root
       RABBITMQ_DEFAULT_PASS: root
      
-networks:
-  backend:
-    driver: bridge
 
  

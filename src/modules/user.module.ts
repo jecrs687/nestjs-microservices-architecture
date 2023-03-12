@@ -13,6 +13,8 @@ import { HealthService } from '@domain/services/health.service';
 import { UserService } from '@domain/services/user.service';
 import { AvatarRepositoryMemory } from '@infra/database/memory/avatar.database';
 import { UserRepositoryMemory } from '@infra/database/memory/user.database';
+import { UserSchema } from '@infra/database/mongo/entities/user.mongo';
+import { UserRepositoryMongo } from '@infra/database/mongo/user.database';
 import { RabbitMqService } from '@infra/events/rabbitMq.events';
 import { SendEmailService } from '@infra/events/sendEmail.evemts';
 import { UserFactory } from '@infra/factory/user.factory';
@@ -25,10 +27,28 @@ import { HealthResponse } from '@infra/health/health.response';
 import { AvatarStorageMemory } from '@infra/storage/memory/Avatar.storage';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-
+import { MongooseModule } from '@nestjs/mongoose';
+import { Connection } from 'mongoose';
 const isTest = process.env.NODE_ENV == 'test';
 @Module({
-  imports: [ConfigModule],
+  imports: [
+    ConfigModule.forRoot({
+      envFilePath: '.env'
+    }), 
+    MongooseModule.forRoot('mongodb://root:root@localhost:27017', {
+      connectionName: 'users',
+      dbName: 'users',
+      connectionFactory: (connection: Connection) => {
+        const model = connection.model('User', UserSchema);
+        return connection;
+      }
+      
+    }),
+    MongooseModule.forRoot('mongodb://root:root@127.0.0.1:27017', {
+      connectionName: 'avatars',
+      dbName: 'avatars',
+    }),
+  ],
   controllers: [UserController, AvatarController],
   providers: [
     HealthService,
@@ -38,7 +58,7 @@ const isTest = process.env.NODE_ENV == 'test';
     },
     {
       provide: UserRepository,
-      useClass: UserRepositoryMemory,
+      useClass: isTest? UserRepositoryMemory:UserRepositoryMongo,
     },
     {
       provide: ReqResClient,
