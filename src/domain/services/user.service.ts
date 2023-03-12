@@ -24,9 +24,7 @@ export class UserService {
         this.reqResClient.endpoints.getUser(id),
       );
       if (!data) throw new NotFoundException('user not found');
-      const userDto = await this.userRepository.postUser(
-        data as UserEntity,
-      );
+      const userDto = await this.userRepository.postUser(data as UserEntity);
       return userDto;
     }
     return userMemory;
@@ -46,6 +44,6 @@ export class UserService {
     return data as UserEntity;
   }
   public async removeAvatar(user: string): Promise<boolean> {
-    return await this.userRepository.removeAvatar(user);;
+    return await this.userRepository.removeAvatar(user);
   }
 }

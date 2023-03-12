@@ -13,7 +13,15 @@ import { HealthService } from '@domain/services/health.service';
 import { UserService } from '@domain/services/user.service';
 import { AvatarRepositoryMemory } from '@infra/database/memory/avatar.database';
 import { UserRepositoryMemory } from '@infra/database/memory/user.database';
-import { UserSchema } from '@infra/database/mongo/entities/user.mongo';
+import { AvatarRepositoryMongo } from '@infra/database/mongo/avatar.databa.se';
+import {
+  AvatarMongo,
+  AvatarSchema,
+} from '@infra/database/mongo/entities/avatar.mongo';
+import {
+  UserMongo,
+  UserSchema,
+} from '@infra/database/mongo/entities/user.mongo';
 import { UserRepositoryMongo } from '@infra/database/mongo/user.database';
 import { RabbitMqService } from '@infra/events/rabbitMq.events';
 import { SendEmailService } from '@infra/events/sendEmail.evemts';
@@ -33,20 +41,23 @@ const isTest = process.env.NODE_ENV == 'test';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: '.env'
-    }), 
+      envFilePath: '.env',
+    }),
     MongooseModule.forRoot('mongodb://root:root@localhost:27017', {
       connectionName: 'users',
       dbName: 'users',
       connectionFactory: (connection: Connection) => {
-        const model = connection.model('User', UserSchema);
+        connection.model(UserMongo.name, UserSchema);
         return connection;
-      }
-      
+      },
     }),
     MongooseModule.forRoot('mongodb://root:root@127.0.0.1:27017', {
       connectionName: 'avatars',
       dbName: 'avatars',
+      connectionFactory: (connection: Connection) => {
+        connection.model(AvatarMongo.name, AvatarSchema);
+        return connection;
+      },
     }),
   ],
   controllers: [UserController, AvatarController],
@@ -58,15 +69,15 @@ const isTest = process.env.NODE_ENV == 'test';
     },
     {
       provide: UserRepository,
-      useClass: isTest? UserRepositoryMemory:UserRepositoryMongo,
+      useClass: isTest ? UserRepositoryMemory : UserRepositoryMongo,
     },
     {
       provide: ReqResClient,
-      useClass: isTest? ReqResClientServiceMock: ReqResClientService,
+      useClass: isTest ? ReqResClientServiceMock : ReqResClientService,
     },
     {
       provide: AvatarRepository,
-      useClass: AvatarRepositoryMemory,
+      useClass: isTest ? AvatarRepositoryMemory : AvatarRepositoryMongo,
     },
     {
       provide: EmailSender,
@@ -82,8 +93,9 @@ const isTest = process.env.NODE_ENV == 'test';
     },
     {
       provide: ImageClient,
-      useClass: isTest? ImageClientServiceMock: ImageClientService,
+      useClass: isTest ? ImageClientServiceMock : ImageClientService,
     },
+
     Client,
     UserService,
     AvatarService,
